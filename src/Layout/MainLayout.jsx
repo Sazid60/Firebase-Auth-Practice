@@ -4,7 +4,7 @@ import Navbar from '../Components/Navbar';
 
 const MainLayout = () => {
     return (
-        <div>
+        <div className='container mx-auto'>
             <Navbar></Navbar>
             <div className='flex flex-col justify-center items-center'>
             <Outlet></Outlet>
