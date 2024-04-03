@@ -1,14 +1,37 @@
+import { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../AuthProvider/AuthProvider";
 
 
 const Navbar = () => {
+    const { signOutUser, user } = useContext(AuthContext)
+
     const navLinks = <>
         <li><NavLink to={"/"}>Home</NavLink></li>
-        <li><NavLink to={"/login"}>Login</NavLink></li>
-        <li><NavLink to={"/register"}>Register</NavLink></li>
+        { !user &&
+            <>
+                <li><NavLink to={"/login"}>Login</NavLink></li>
+                <li><NavLink to={"/register"}>Register</NavLink></li>
+            </>
+        }
         <li><NavLink to={"/about"}>About</NavLink></li>
-        <li><NavLink to={"/profile"}>Profile</NavLink></li>
+        {user && <>
+            
+            <li><NavLink to={"/profile"}>Profile</NavLink></li>
+        </>
+        }
     </>
+    // Sign Out  
+    const handleSignOut = () => {
+
+        signOutUser()
+            .then(() => {
+                console.log("User Logged Out")
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
+    }
     return (
         <div className="navbar bg-base-100">
             <div className="navbar-start">
@@ -27,9 +50,20 @@ const Navbar = () => {
                     {navLinks}
                 </ul>
             </div>
-            <div className="navbar-end">
-                <a className="btn btn-sm">Sign Out</a>
-            </div>
+            {
+                user ?
+                    <div className="navbar-end flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                            <img className="h-6 w-6 rounded-full" src={user.photoURL} alt="" />
+                            <p>{user.displayName}</p>
+                        </div>
+                        <a className="btn btn-sm" onClick={handleSignOut}>Sign Out</a>
+                    </div> :
+                    <div className="navbar-end">
+                        <a className="btn btn-sm">Sign In</a>
+                    </div>
+
+            }
         </div>
     );
 };
